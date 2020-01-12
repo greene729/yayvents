@@ -15,6 +15,8 @@ class EventDashboard extends Component {
         }));
     };
 
+    handleCreateEvent = (newEvent) =>
+
     render() {
         const { events, isOpen } = this.state;
         return (

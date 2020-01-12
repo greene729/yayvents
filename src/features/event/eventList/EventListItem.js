@@ -15,9 +15,9 @@ class EventListItem extends Component {
                                 src='https://randomuser.me/api/portraits/women/42.jpg'
                             />
                             <Item.Content>
-                                <Item.Header as='a'>Event Title</Item.Header>
+                                <Item.Header>Event Title</Item.Header>
                                 <Item.Description>
-                                    Hosted by <a>hosted by</a>
+                                    Hosted by hosted by
                                 </Item.Description>
                             </Item.Content>
                         </Item>
