@@ -15,7 +15,7 @@ class EventForm extends Component {
         this.props.createEvent(this.state);
     };
 
-handleInputChange = ({target: {name, value}}) => {
+    handleInputChange = ({ target: { name, value } }) => {
         this.setState({
             [name]: value
         });
