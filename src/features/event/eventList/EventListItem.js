@@ -4,7 +4,7 @@ import EventListAttendee from "./EventListAttendee";
 
 class EventListItem extends Component {
     render() {
-        const { event, selectEvent } = this.props;
+        const { event, selectEvent, deleteEvent } = this.props;
         return (
             <Segment.Group>
                 <Segment>
@@ -13,12 +13,12 @@ class EventListItem extends Component {
                             <Item.Image
                                 size='tiny'
                                 circular
-                                src='https://randomuser.me/api/portraits/women/42.jpg'
+                                src={event.hostPhotoUrl}
                             />
                             <Item.Content>
-                                <Item.Header>Event Title</Item.Header>
+                                <Item.Header>{event.title}</Item.Header>
                                 <Item.Description>
-                                    Hosted by hosted by
+                                    Hosted by {event.hostedBy}
                                 </Item.Description>
                             </Item.Content>
                         </Item>
@@ -26,8 +26,8 @@ class EventListItem extends Component {
                 </Segment>
                 <Segment>
                     <span>
-                        <Icon name='clock' /> date |
-                        <Icon name='marker' /> time
+                        <Icon name='clock' /> {event.date} |
+                        <Icon name='marker' /> {event.venue}
                     </span>
                 </Segment>
                 <Segment secondary>
@@ -42,7 +42,14 @@ class EventListItem extends Component {
                     </List>
                 </Segment>
                 <Segment clearing>
-                    <span>Description will go here</span>
+                    <span>{event.description}</span>
+                    <Button
+                        onClick={() => deleteEvent(event.id)}
+                        as='a'
+                        color='red'
+                        floated='right'
+                        content='Delete'
+                    />
                     <Button
                         onClick={() => selectEvent(event)}
                         as='a'
