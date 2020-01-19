@@ -1,14 +1,14 @@
 import React, { Component, Fragment } from "react";
 import { Container } from "semantic-ui-react";
-import EventDashboard from "../../features/event/EventDashboard/EventDashboard";
-import NavBar from "../../features/nav/navBar/NavBar";
 import { Route } from "react-router-dom";
-import HomePage from "../../features/home/HomePage";
+import EventDashboard from "../../features/event/EventDashboard/EventDashboard";
 import EventDetailedPage from "../../features/event/EventDetailed/EventDetailedPage";
-import PeopleDashboard from "../../features/user/PeopleDashboard/PeopleDashboard";
-import UserDetailedPage from "../../features/user/UserDetailed/UserDetailedPage";
-import SettingsDashboard from "../../features/user/Settings/SettingsDashboard";
 import EventForm from "../../features/event/EventForm/EventForm";
+import HomePage from "../../features/home/HomePage";
+import NavBar from "../../features/nav/NavBar/NavBar";
+import PeopleDashboard from "../../features/user/PeopleDashboard/PeopleDashboard";
+import SettingsDashboard from "../../features/user/Settings/SettingsDashboard";
+import UserDetailedPage from "../../features/user/UserDetailed/UserDetailedPage";
 
 class App extends Component {
     render() {
