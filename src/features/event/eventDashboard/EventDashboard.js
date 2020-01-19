@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Grid, Button } from "semantic-ui-react";
-import EventList from "../eventList/EventList";
+import EventList from "../EventList/EventList";
 import EventForm from "../EventForm/EventForm";
 import cuid from "cuid";
 
