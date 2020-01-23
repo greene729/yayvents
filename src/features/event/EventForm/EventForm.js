@@ -13,6 +13,7 @@ import {
     isRequired,
     hasLengthGreaterThan
 } from "revalidate";
+import DateInput from "../../../app/common/form/DateInput";
 
 const mapStateToProps = (state, ownProps) => {
     const eventId = ownProps.match.params.id;
@@ -43,7 +44,8 @@ const validate = combineValidators({
         })
     )(),
     city: isRequired("city"),
-    venue: isRequired("venue")
+    venue: isRequired("venue"),
+    date: isRequired("date")
 });
 
 const category = [
@@ -121,7 +123,10 @@ class EventForm extends Component {
                             />
                             <Field
                                 name='date'
-                                component={TextInput}
+                                component={DateInput}
+                                dateFormat='dd LLL yyyy h:mm a'
+                                showTimeSelect
+                                timeFormat='HH:mm' /* 24-hr time; default value is am/pm */
                                 placeholder='Date'
                             />
                             <Button positive type='submit'>
