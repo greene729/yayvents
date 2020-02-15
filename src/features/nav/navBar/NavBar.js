@@ -41,8 +41,6 @@ class NavBar extends Component {
 						Yay!-vents
 					</Menu.Item>
 					<Menu.Item as={NavLink} exact to='/events' name='Events' />
-					<Menu.Item as={NavLink} to='/people' name='People' />
-					<Menu.Item as={NavLink} to='/test' name='Test' />
 					{authenticated ? (
 						<SignedInMenu
 							signOut={this.handleSignOut}

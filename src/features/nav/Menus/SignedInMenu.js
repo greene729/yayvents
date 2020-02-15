@@ -1,10 +1,12 @@
 import React, { Fragment } from 'react';
 import { Menu, Image, Dropdown, Button } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 const SignedInMenu = ({ signOut, currentUser }) => {
 	return (
 		<Fragment>
+			<Menu.Item as={NavLink} to='/people' name='People' />
+			<Menu.Item as={NavLink} to='/test' name='Test' />
 			<Menu.Item>
 				<Button
 					as={Link}
