@@ -10,13 +10,19 @@ const actions = {
 	registerUser,
 };
 
-const validate = {
+const validate = combineValidators({
 	displayName: isRequired('displayName'),
 	email: isRequired('email'),
 	password: isRequired('password'),
-};
+});
 
-const RegisterForm = ({ handleSubmit, registerUser, error, invalid, submitting }) => {
+const RegisterForm = ({
+	handleSubmit,
+	registerUser,
+	error,
+	invalid,
+	submitting,
+}) => {
 	return (
 		<div>
 			<Form
@@ -43,8 +49,17 @@ const RegisterForm = ({ handleSubmit, registerUser, error, invalid, submitting }
 						component={TextInput}
 						placeholder='Password'
 					/>
-					{error && <Label basic color='red'>{error}</Label>}
-					<Button disabled={invalid || submitting} fluid size='large' color='teal'>
+					{error && (
+						<Label basic color='red'>
+							{error}
+						</Label>
+					)}
+					<Button
+						disabled={invalid || submitting}
+						fluid
+						size='large'
+						color='teal'
+					>
 						Register
 					</Button>
 				</Segment>
