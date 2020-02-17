@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Icon, Item, List, Segment } from 'semantic-ui-react';
 import EventListAttendee from './EventListAttendee';
 import { Link } from 'react-router-dom';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 
 class EventListItem extends Component {
 	render() {
@@ -27,17 +27,21 @@ class EventListItem extends Component {
 					</Item.Group>
 				</Segment>
 				<Segment>
-					<span>
-						<Icon name='clock' />
-						{format(event.date.toDate(), 'EEEE do LLL')} at{' '}
-						{format(event.date.toDate(), 'h:mm a')} |
-						<Icon name='marker' /> {event.venue}
-					</span>
+					{event.date && event.venue && (
+						<span>
+							<Icon name='clock' />
+							{format(event.date.toDate(), 'EEEE do LLL')} at{' '}
+							{format(event.date.toDate(), 'h:mm a')}} |
+							<Icon name='marker' /> {event.venue}
+						</span>
+					)}
 				</Segment>
 				<Segment secondary>
 					<List horizontal>
 						{event.attendees &&
-							Object.values(event.attendees).map((attendee, index) => (
+							Object.values(
+								event.attendees
+							).map((attendee, index) => (
 								<EventListAttendee
 									key={index}
 									attendee={attendee}
