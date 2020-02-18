@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Menu, Image, Dropdown, Button } from 'semantic-ui-react';
 import { Link, NavLink } from 'react-router-dom';
 
-const SignedInMenu = ({ signOut, auth }) => {
+const SignedInMenu = ({ signOut, profile }) => {
 	return (
 		<Fragment>
 			<Menu.Item as={NavLink} to='/people' name='People' />
@@ -18,8 +18,8 @@ const SignedInMenu = ({ signOut, auth }) => {
 				/>
 			</Menu.Item>
 			<Menu.Item position='right'>
-				<Image avatar spaced='right' src='/assets/user.png' />
-				<Dropdown pointing='top left' text={auth.email}>
+				<Image avatar spaced='right' src={profile.photoURL || '/assets/user.png'} />
+				<Dropdown pointing='top left' text={profile.displayName}>
 					<Dropdown.Menu>
 						<Dropdown.Item text='Create Event' icon='plus' />
 						<Dropdown.Item text='My Events' icon='calendar' />
