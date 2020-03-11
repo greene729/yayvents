@@ -43,6 +43,7 @@ class NavBar extends Component {
 					<Menu.Item as={NavLink} exact to='/events' name='Events' />
 					{authenticated ? (
 						<SignedInMenu
+							auth={auth}
 							signOut={this.handleSignOut}
 							profile={profile}
 						/>
