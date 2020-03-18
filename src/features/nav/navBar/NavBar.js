@@ -13,7 +13,7 @@ const actions = {
 
 const mapStateToProps = state => ({
 	auth: state.firebase.auth,
-	profile: state.firebase.profile
+	profile: state.firebase.profile,
 });
 
 class NavBar extends Component {
