@@ -3,7 +3,7 @@ import EventListItem from './EventListItem';
 
 class EventList extends Component {
 	render() {
-		const { events, deleteEvent } = this.props;
+		const { events } = this.props;
 		return (
 			<Fragment>
 				<h1>Event List</h1>
@@ -12,7 +12,6 @@ class EventList extends Component {
 						<EventListItem
 							key={event.id}
 							event={event}
-							deleteEvent={deleteEvent}
 						/>
 					))}
 			</Fragment>

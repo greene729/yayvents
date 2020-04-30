@@ -22,7 +22,7 @@ export const UserPhotos = ({ photos, profile, deletePhoto, setMainPhoto }) => {
 				{photos &&
 					filteredPhotos.map(photo => (
 						<Card key={photo.id}>
-							<Image size='medium' src={photo.url} />
+							<Image size='medium' src={photo.url} style={style} />
 							<div className='ui two buttons'>
 								<Button onClick={() => setMainPhoto(photo)} basic color='green'>
 									Main

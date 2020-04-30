@@ -1,7 +1,6 @@
 import { toastr } from 'react-redux-toastr';
 import { asyncActionStart, asyncActionError } from '../async/asyncActions';
 import cuid from 'cuid';
-import { UserPhotos } from './Settings/Photos/UserPhotos';
 
 export const updateProfile = user => async (
 	dispatch,
@@ -94,7 +93,7 @@ export const setMainPhoto = photo => async (
 	{ getFirebase }
 ) => {
 	const firebase = getFirebase();
-	const user = firebase.auth().currentUser;
+	// const user = firebase.auth().currentUser;
 	try {
 		return await firebase.updateProfile({
 			photoURL: photo.url,
@@ -104,3 +103,50 @@ export const setMainPhoto = photo => async (
 		throw new Error('Problem setting main photo');
 	}
 };
+
+export const goingToEvent = (event) =>
+	async (dispatch, getState, {getFirebase, getFirestore}) => {
+		const firebase = getFirebase();
+		const firestore = getFirestore();
+		const user = firebase.auth().currentUser;
+		const profile = getState().firebase.profile;
+		const attendee = {
+			going: true,
+			joinDate: firestore.FieldValue.serverTimestamp(),
+			photoURL: profile.photoURL || '/assets/user.png',
+			displayName: profile.displayName,
+			host: false
+		}
+		try {
+			await firestore.update(`events/${event.id}`, {
+				[`attendees.${user.uid}`]: attendee
+			})
+			await firestore.set(`event_attendee/${event.id}_${user.uid}`, {
+				eventId: event.id,
+				userUid: user.uid,
+				eventDate: event.date,
+				host: false
+			})
+			toastr.success('Success', 'You are now going to this event!')
+		} catch (error) {
+			console.log(error);
+			toastr.error('Oops', 'There was a problem signing up for this event.')
+		}
+	}
+
+	export const cancelGoingToEvent = (event) =>
+	async (dispatch, getState, {getFirestore, getFirebase}) => {
+		const firestore = getFirestore();
+		const firebase = getFirebase();
+		const user = firebase.auth().currentUser;
+		try {
+			await firestore.update(`events/${event.id}`, {
+				[`attendees.${user.uid}`]: firestore.FieldValue.delete()
+			})
+			await firestore.delete(`event_attendee/${event.id}_${user.uid}`);
+			toastr.success('Success','You are no longer going to this event.')
+		} catch (error) {
+			console.log(error)
+			toastr.error('Oops', 'Something went wrong.')
+		}
+	}
