@@ -1,5 +1,12 @@
 import { toastr } from 'react-redux-toastr';
 import { createNewEvent } from '../../app/common/util/helpers';
+import firebase from '../../app/config/firebase';
+import { FETCH_EVENTS } from './eventConstants';
+import {
+	asyncActionStart,
+	asyncActionFinish,
+	asyncActionError,
+} from '../async/asyncActions';
 
 export const createEvent = (event) => {
 	return async (dispatch, getState, { getFirestore, getFirebase }) => {
@@ -14,10 +21,10 @@ export const createEvent = (event) => {
 				`event_attendee/${createdEvent.id}_${user.uid}`,
 				{
 					eventId: createdEvent.id,
-					userId: user.uid,
+					userUid: user.uid,
 					eventDate: event.date,
 					host: true,
-				},
+				}
 			);
 			toastr.success('Success!', 'Event has been created');
 			return createdEvent;
@@ -42,7 +49,7 @@ export const updateEvent = (event) => {
 export const cancelToggle = (cancelled, eventId) => async (
 	dispatch,
 	getState,
-	{ getFirestore },
+	{ getFirestore }
 ) => {
 	const firestore = getFirestore();
 	const message = cancelled
@@ -57,5 +64,56 @@ export const cancelToggle = (cancelled, eventId) => async (
 		});
 	} catch (error) {
 		console.log(error);
+	}
+};
+
+export const getEventsForDashboard = (lastEvent) => async (
+	dispatch,
+	getState
+) => {
+	let today = new Date();
+	const firestore = firebase.firestore();
+	const eventsRef = firestore.collection('events');
+	try {
+		dispatch(asyncActionStart());
+		let startAfter =
+			lastEvent &&
+			(await firestore.collection('events').doc(lastEvent.id).get());
+		let query;
+
+		lastEvent
+			? (query = eventsRef
+					.where('date', '>=', today)
+					.orderBy('date')
+					.startAfter(startAfter)
+					.limit(2))
+			: (query = eventsRef
+					.where('date', '>=', today)
+					.orderBy('date')
+					.limit(2));
+
+		let querySnapshot = await query.get();
+
+		if (querySnapshot.docs.length === 0) {
+			dispatch(asyncActionFinish());
+			return querySnapshot;
+		}
+
+		let events = [];
+
+		for (let i = 0; i < querySnapshot.docs.length; i++) {
+			let event = {
+				...querySnapshot.docs[i].data(),
+				id: querySnapshot.docs[i].id,
+			};
+			events.push(event);
+		}
+
+		dispatch({ type: FETCH_EVENTS, payload: { events } });
+		dispatch(asyncActionFinish());
+		return querySnapshot;
+	} catch (error) {
+		console.log(error);
+		dispatch(asyncActionError());
 	}
 };
