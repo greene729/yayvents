@@ -4,7 +4,6 @@ import {
 	Segment,
 	Header,
 	Image,
-	Menu,
 	Card,
 	Tab,
 } from 'semantic-ui-react';
