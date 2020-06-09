@@ -11,6 +11,7 @@ import { goingToEvent, cancelGoingToEvent } from '../../user/userActions';
 import { addEventComment } from '../eventActions';
 import EventDetailedChat from './EventDetailedChat';
 import { openModal } from '../../modals/modalActions';
+import { LoadingComponent } from '../../../app/layout/LoadingComponent';
 
 const mapStateToProps = (state, ownProps) => {
 	const eventId = ownProps.match.params.id;
@@ -23,6 +24,7 @@ const mapStateToProps = (state, ownProps) => {
 
 	return {
 		event,
+		requesting: state.firestore.status.requesting,
 		loading: state.async.loading,
 		auth: state.firebase.auth,
 		eventChat:
@@ -59,12 +61,18 @@ class EventDetailedPage extends Component {
 			addEventComment,
 			eventChat,
 			openModal,
+			requesting,
+			match
 		} = this.props;
 		const attendees = event && event.attendees && objectToArray(event.attendees);
 		const isHost = event.hostUid === auth.uid;
 		const isGoing = attendees && attendees.some((a) => a.id === auth.uid);
 		const chatTree = !isEmpty(eventChat) && createDataTree(eventChat);
 		const authenticated = auth.isLoaded && !auth.isEmpty;
+		const loadingEvent = requesting[`events/${match.params.id}`]
+
+		if (loadingEvent) return <LoadingComponent />
+
 		return (
 			<Grid>
 				<Grid.Column width={10}>

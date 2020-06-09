@@ -119,15 +119,7 @@ class EventForm extends Component {
 	};
 
 	render() {
-		const {
-			history,
-			invalid,
-			submitting,
-			pristine,
-			event,
-			cancelToggle,
-			loading,
-		} = this.props;
+		const { history, invalid, submitting, pristine, event, cancelToggle, loading } = this.props;
 		return (
 			<Grid>
 				<Grid.Column width={10}>
@@ -196,13 +188,15 @@ class EventForm extends Component {
 							>
 								Cancel
 							</Button>
-							<Button
-								type='button'
-								color={event.cancelled ? 'green' : 'red'}
-								floated='right'
-								content={event.cancelled ? 'Reactivate event' : 'Cancel event'}
-								onClick={() => cancelToggle(!event.cancelled, event.id)}
-							/>
+							{event.id && (
+								<Button
+									type='button'
+									color={event.cancelled ? 'green' : 'red'}
+									floated='right'
+									content={event.cancelled ? 'Reactivate event' : 'Cancel event'}
+									onClick={() => cancelToggle(!event.cancelled, event.id)}
+								/>
+							)}
 						</Form>
 					</Segment>
 				</Grid.Column>

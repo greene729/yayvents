@@ -56,6 +56,7 @@ const RegisterForm = ({
 						</Label>
 					)}
 					<Button
+						loading={submitting}
 						disabled={invalid || submitting}
 						fluid
 						size='large'
