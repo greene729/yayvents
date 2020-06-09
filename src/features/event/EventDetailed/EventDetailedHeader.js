@@ -23,6 +23,8 @@ export const EventDetailedHeader = ({
 	isHost,
 	goingToEvent,
 	cancelGoingToEvent,
+	authenticated,
+	openModal
 }) => {
 	return (
 		<Segment.Group>
@@ -44,17 +46,20 @@ export const EventDetailedHeader = ({
 								/>
 								{event.date && (
 									<p>
-										{event.date &&
-											format(
-												event.date.toDate(),
-												'EEEE do LLL',
-											)}{' '}
-										at{' '}
-										{format(event.date.toDate(), 'h:mm a')}
+										{event.date && format(event.date.toDate(), 'EEEE do LLL')}{' '}
+										at {format(event.date.toDate(), 'h:mm a')}
 									</p>
 								)}
 								<p>
-									Hosted by <strong><Link to={`/profile/${event.hostUid}`} style={{color: 'white'}}>{event.hostedBy}</Link></strong>
+									Hosted by{' '}
+									<strong>
+										<Link
+											to={`/profile/${event.hostUid}`}
+											style={{ color: 'white' }}
+										>
+											{event.hostedBy}
+										</Link>
+									</strong>
 								</p>
 							</Item.Content>
 						</Item>
@@ -65,7 +70,7 @@ export const EventDetailedHeader = ({
 			<Segment attached='bottom' clearing>
 				{!isHost && (
 					<Fragment>
-						{isGoing ? (
+						{isGoing && (
 							<Button
 								onClick={() => {
 									cancelGoingToEvent(event);
@@ -73,26 +78,31 @@ export const EventDetailedHeader = ({
 							>
 								Cancel My Place
 							</Button>
-						) : (
-							<Button
-								color='teal'
-								loading={loading}
-								onClick={() => {
-									goingToEvent(event);
-								}}
-							>
-								JOIN THIS EVENT
-							</Button>
 						)}
+						{!isGoing && authenticated &&
+						<Button
+							color='teal'
+							loading={loading}
+							onClick={() => {
+								goingToEvent(event);
+							}}
+						>
+							JOIN THIS EVENT
+						</Button>}
+
+						{!authenticated && <Button
+							color='teal'
+							loading={loading}
+							onClick={() => {
+								openModal('UnauthModal');
+							}}
+						>
+							JOIN THIS EVENT
+						</Button>}
 					</Fragment>
 				)}
 				{isHost && (
-					<Button
-						as={Link}
-						to={`/manage/${event.id}`}
-						color='orange'
-						floated='right'
-					>
+					<Button as={Link} to={`/manage/${event.id}`} color='orange' floated='right'>
 						Manage Event
 					</Button>
 				)}
