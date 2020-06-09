@@ -3,7 +3,6 @@ import { Segment, Item, Label, List } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 export const EventDetailedSidebar = ({ attendees }) => {
-	let isHost = false;
 	return (
 		<Fragment>
 			<Segment
@@ -26,7 +25,7 @@ export const EventDetailedSidebar = ({ attendees }) => {
 								key={attendee.id}
 								style={{ position: 'relative' }}
 							>
-								{isHost && (
+								{attendee.host && (
 									<Label
 										style={{ position: 'absolute' }}
 										color='orange'

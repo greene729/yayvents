@@ -12,6 +12,7 @@ import { addEventComment } from '../eventActions';
 import EventDetailedChat from './EventDetailedChat';
 import { openModal } from '../../modals/modalActions';
 import { LoadingComponent } from '../../../app/layout/LoadingComponent';
+import NotFound from '../../../app/layout/NotFound';
 
 const mapStateToProps = (state, ownProps) => {
 	const eventId = ownProps.match.params.id;
@@ -62,16 +63,22 @@ class EventDetailedPage extends Component {
 			eventChat,
 			openModal,
 			requesting,
-			match
+			match,
 		} = this.props;
-		const attendees = event && event.attendees && objectToArray(event.attendees);
+		const attendees =
+			event &&
+			event.attendees &&
+			objectToArray(event.attendees).sort((a, b) => {
+				return a.joinDate.toDate() - b.joinDate.toDate();
+			});
 		const isHost = event.hostUid === auth.uid;
 		const isGoing = attendees && attendees.some((a) => a.id === auth.uid);
 		const chatTree = !isEmpty(eventChat) && createDataTree(eventChat);
 		const authenticated = auth.isLoaded && !auth.isEmpty;
-		const loadingEvent = requesting[`events/${match.params.id}`]
+		const loadingEvent = requesting[`events/${match.params.id}`];
 
-		if (loadingEvent) return <LoadingComponent />
+		if (loadingEvent) return <LoadingComponent />;
+		if (Object.keys(event).length === 0) return <NotFound />;
 
 		return (
 			<Grid>

@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Segment, Image, Item, Header, Button } from 'semantic-ui-react';
+import { Segment, Image, Item, Header, Button, Label } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 
@@ -24,7 +24,7 @@ export const EventDetailedHeader = ({
 	goingToEvent,
 	cancelGoingToEvent,
 	authenticated,
-	openModal
+	openModal,
 }) => {
 	return (
 		<Segment.Group>
@@ -68,9 +68,12 @@ export const EventDetailedHeader = ({
 			</Segment>
 
 			<Segment attached='bottom' clearing>
+				{event.cancelled && (
+					<Label size='large' color='red' content='This event has been cancelled' />
+				)}
 				{!isHost && (
 					<Fragment>
-						{isGoing && (
+						{isGoing && !event.cancelled && (
 							<Button
 								onClick={() => {
 									cancelGoingToEvent(event);
@@ -79,26 +82,29 @@ export const EventDetailedHeader = ({
 								Cancel My Place
 							</Button>
 						)}
-						{!isGoing && authenticated &&
-						<Button
-							color='teal'
-							loading={loading}
-							onClick={() => {
-								goingToEvent(event);
-							}}
-						>
-							JOIN THIS EVENT
-						</Button>}
+						{!isGoing && authenticated && !event.cancelled && (
+							<Button
+								color='teal'
+								loading={loading}
+								onClick={() => {
+									goingToEvent(event);
+								}}
+							>
+								JOIN THIS EVENT
+							</Button>
+						)}
 
-						{!authenticated && <Button
-							color='teal'
-							loading={loading}
-							onClick={() => {
-								openModal('UnauthModal');
-							}}
-						>
-							JOIN THIS EVENT
-						</Button>}
+						{!authenticated && !event.cancelled && (
+							<Button
+								color='teal'
+								loading={loading}
+								onClick={() => {
+									openModal('UnauthModal');
+								}}
+							>
+								JOIN THIS EVENT
+							</Button>
+						)}
 					</Fragment>
 				)}
 				{isHost && (

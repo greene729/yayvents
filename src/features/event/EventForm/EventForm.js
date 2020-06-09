@@ -188,6 +188,7 @@ class EventForm extends Component {
 							>
 								Cancel
 							</Button>
+							{/* TODO: Make this button take you back to event page when cancelling/reactivating */}
 							{event.id && (
 								<Button
 									type='button'
