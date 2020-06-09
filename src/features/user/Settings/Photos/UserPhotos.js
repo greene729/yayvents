@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Header, Card, Image, Button } from 'semantic-ui-react';
 
-export const UserPhotos = ({ photos, profile, deletePhoto, setMainPhoto }) => {
+export const UserPhotos = ({ photos, profile, deletePhoto, setMainPhoto, loading }) => {
     let filteredPhotos;
     if (photos) {
         filteredPhotos = photos.filter(photo => {
@@ -24,7 +24,7 @@ export const UserPhotos = ({ photos, profile, deletePhoto, setMainPhoto }) => {
 						<Card key={photo.id}>
 							<Image size='medium' src={photo.url} style={style} />
 							<div className='ui two buttons'>
-								<Button onClick={() => setMainPhoto(photo)} basic color='green'>
+								<Button onClick={() => setMainPhoto(photo)} basic color='green' loading={loading}>
 									Main
 								</Button>
 								<Button onClick={() => deletePhoto(photo)} basic icon='trash' color='red' />

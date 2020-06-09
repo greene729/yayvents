@@ -8,12 +8,7 @@ import TextInput from '../../../app/common/form/TextInput';
 import TextArea from '../../../app/common/form/TextArea';
 import SelectInput from '../../../app/common/form/SelectInput';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
-import {
-	combineValidators,
-	composeValidators,
-	isRequired,
-	hasLengthGreaterThan,
-} from 'revalidate';
+import { combineValidators, composeValidators, isRequired, hasLengthGreaterThan } from 'revalidate';
 import DateInput from '../../../app/common/form/DateInput';
 import PlaceInput from '../../../app/common/form/PlaceInput';
 import { withFirestore } from 'react-redux-firebase';
@@ -23,19 +18,14 @@ const mapStateToProps = (state, ownProps) => {
 
 	let event = {};
 
-	if (
-		state.firestore.ordered.events &&
-		state.firestore.ordered.events.length > 0
-	) {
-		event =
-			state.firestore.ordered.events.filter(
-				(event) => event.id === eventId,
-			)[0] || {};
+	if (state.firestore.ordered.events && state.firestore.ordered.events.length > 0) {
+		event = state.firestore.ordered.events.filter((event) => event.id === eventId)[0] || {};
 	}
 
 	return {
 		initialValues: event,
 		event,
+		loading: state.async.loading,
 	};
 };
 
@@ -52,7 +42,7 @@ const validate = combineValidators({
 		isRequired({ message: 'Please enter a description' }),
 		hasLengthGreaterThan(4)({
 			message: 'Description needs to be at least 5 characters',
-		}),
+		})
 	)(),
 	city: isRequired('city'),
 	venue: isRequired('venue'),
@@ -91,10 +81,8 @@ class EventForm extends Component {
 				if (Object.keys(values.venueLatLng).length === 0) {
 					values.venueLatLng = this.props.event.venueLatLng;
 				}
-				this.props.updateEvent(values);
-				this.props.history.push(
-					`/events/${this.props.initialValues.id}`,
-				);
+				await this.props.updateEvent(values);
+				this.props.history.push(`/events/${this.props.initialValues.id}`);
 			} else {
 				let createdEvent = await this.props.createEvent(values);
 				this.props.history.push(`/events/${createdEvent.id}`);
@@ -133,12 +121,12 @@ class EventForm extends Component {
 	render() {
 		const {
 			history,
-			initialValues,
 			invalid,
 			submitting,
 			pristine,
 			event,
 			cancelToggle,
+			loading,
 		} = this.props;
 		return (
 			<Grid>
@@ -146,16 +134,10 @@ class EventForm extends Component {
 					<Segment>
 						<Header sub color='teal' content='Event Details' />
 						<Form
-							onSubmit={this.props.handleSubmit(
-								this.onFormSubmit,
-							)}
+							onSubmit={this.props.handleSubmit(this.onFormSubmit)}
 							autoComplete='off'
 						>
-							<Field
-								name='title'
-								component={TextInput}
-								placeholder='Event Title'
-							/>
+							<Field name='title' component={TextInput} placeholder='Event Title' />
 							<Field
 								name='category'
 								component={SelectInput}
@@ -180,9 +162,7 @@ class EventForm extends Component {
 								name='venue'
 								component={PlaceInput}
 								options={{
-									location: new google.maps.LatLng(
-										this.state.cityLatLng,
-									),
+									location: new google.maps.LatLng(this.state.cityLatLng),
 									radius: 1000,
 									types: ['establishment'],
 								}}
@@ -197,20 +177,22 @@ class EventForm extends Component {
 								timeFormat='HH:mm' /* 24-hr time; default value is am/pm */
 								placeholder='Date'
 							/>
-							<Button positive type='submit'>
+							<Button
+								disabled={invalid || submitting || pristine}
+								loading={loading}
+								positive
+								type='submit'
+							>
 								Submit
 							</Button>
 							<Button
 								onClick={
-									initialValues.id
-										? () =>
-												history.push(
-													`/events/${initialValues.id}`,
-												)
+									event && event.id
+										? () => history.push(`/events/${event.id}`)
 										: () => history.push('/events')
 								}
 								type='button'
-								disabled={invalid || submitting || pristine}
+								disabled={loading}
 							>
 								Cancel
 							</Button>
@@ -218,14 +200,8 @@ class EventForm extends Component {
 								type='button'
 								color={event.cancelled ? 'green' : 'red'}
 								floated='right'
-								content={
-									event.cancelled
-										? 'Reactivate event'
-										: 'Cancel event'
-								}
-								onClick={() =>
-									cancelToggle(!event.cancelled, event.id)
-								}
+								content={event.cancelled ? 'Reactivate event' : 'Cancel event'}
+								onClick={() => cancelToggle(!event.cancelled, event.id)}
 							/>
 						</Form>
 					</Segment>
@@ -238,10 +214,6 @@ class EventForm extends Component {
 export default withFirestore(
 	connect(
 		mapStateToProps,
-		actions,
-	)(
-		reduxForm({ form: 'eventForm', validate, enableReinitialize: true })(
-			EventForm,
-		),
-	),
+		actions
+	)(reduxForm({ form: 'eventForm', validate, enableReinitialize: true })(EventForm))
 );

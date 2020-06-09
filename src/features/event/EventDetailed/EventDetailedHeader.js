@@ -18,6 +18,7 @@ const eventImageTextStyle = {
 
 export const EventDetailedHeader = ({
 	event,
+	loading,
 	isGoing,
 	isHost,
 	goingToEvent,
@@ -75,6 +76,7 @@ export const EventDetailedHeader = ({
 						) : (
 							<Button
 								color='teal'
+								loading={loading}
 								onClick={() => {
 									goingToEvent(event);
 								}}
